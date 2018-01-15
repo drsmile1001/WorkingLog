@@ -6,7 +6,7 @@ namespace WorkingLog.Models
     public class WorkingLogItem
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        public Guid Id { get; set; }
 
         public DateTime Date { get; set; }
 

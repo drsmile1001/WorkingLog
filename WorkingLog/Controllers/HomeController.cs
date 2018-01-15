@@ -12,6 +12,7 @@ using WorkingLog.Models;
 
 namespace WorkingLog.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly LiteRepository _db;
@@ -54,7 +55,7 @@ namespace WorkingLog.Controllers
         {
             _db.Insert(new WorkingLogItem
             {
-                Id = ObjectId.NewObjectId(),
+                Id = Guid.NewGuid(),
                 Date = date,
                 Project = project,
                 WorkItem = workItem,
@@ -62,6 +63,15 @@ namespace WorkingLog.Controllers
                 Hours = hours,
                 Detail = detail
             });
+            return Content(new JObject
+            {
+                ["success"] = true
+            }.ToString(Formatting.None));
+        }
+
+        public IActionResult Delete(Guid id)
+        {
+            _db.Delete<WorkingLogItem>(item => item.Id == id);
             return Content(new JObject
             {
                 ["success"] = true
