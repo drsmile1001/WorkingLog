@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCore.Identity.LiteDB.Models;
 using LiteDB;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,10 +18,12 @@ namespace WorkingLog.Controllers
     public class HomeController : Controller
     {
         private readonly LiteRepository _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(LiteRepository db)
+        public HomeController(LiteRepository db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -27,10 +31,11 @@ namespace WorkingLog.Controllers
             return View();
         }
 
-        public IActionResult IndexModel()
+        public async Task<IActionResult> IndexModel()
         {
-
-            var allitems = _db.Query<WorkingLogItem>().ToList();
+            var user = await _userManager.GetUserAsync(User);
+            var allitems = _db.Query<WorkingLogItem>().ToList()
+                .Where(item=>item.UserId == user.Id);
 
             var model = new JArray(allitems
                 .OrderBy(item=>item.Date)
@@ -51,11 +56,14 @@ namespace WorkingLog.Controllers
             return Content(model);
         }
 
-        public IActionResult Add(DateTime date, string project, string workItem, string type, double hours, string detail)
+        public async Task<IActionResult> Add(DateTime date, string project, string workItem, string type, double hours, string detail)
         {
+            var user = await _userManager.GetUserAsync(User);
+            
             _db.Insert(new WorkingLogItem
             {
-                Id = Guid.NewGuid(),
+                Id = ObjectId.NewObjectId().ToString(),
+                UserId = user.Id,
                 Date = date,
                 Project = project,
                 WorkItem = workItem,
@@ -69,7 +77,7 @@ namespace WorkingLog.Controllers
             }.ToString(Formatting.None));
         }
 
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(string id)
         {
             _db.Delete<WorkingLogItem>(item => item.Id == id);
             return Content(new JObject
