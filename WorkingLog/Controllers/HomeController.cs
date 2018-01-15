@@ -3,30 +3,87 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCore.Identity.LiteDB.Models;
+using LiteDB;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using WorkingLog.Models;
 
 namespace WorkingLog.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
+        private readonly LiteRepository _db;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public HomeController(LiteRepository db, UserManager<ApplicationUser> userManager)
+        {
+            _db = db;
+            _userManager = userManager;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> IndexModel()
         {
-            ViewData["Message"] = "Your application description page.";
+            var user = await _userManager.GetUserAsync(User);
+            var allitems = _db.Query<WorkingLogItem>().ToList()
+                .Where(item=>item.UserId == user.Id);
 
-            return View();
+            var model = new JArray(allitems
+                .OrderBy(item=>item.Date)
+                .ThenBy(item=>item.Project)
+                .ThenBy(item=>item.WorkItem)
+                .ThenBy(item=>item.Type)
+                .Select(item => new JObject
+            {
+                ["id"] = item.Id.ToString(),
+                ["date"] = item.Date.ToString("yy/MM/dd"),
+                ["project"] = item.Project,
+                ["workItem"] = item.WorkItem,
+                ["type"] = item.Type,
+                ["hours"] = item.Hours,
+                ["detail"] = item.Detail
+            })).ToString(Formatting.None);
+            
+            return Content(model);
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Add(DateTime date, string project, string workItem, string type, double hours, string detail)
         {
-            ViewData["Message"] = "Your contact page.";
+            var user = await _userManager.GetUserAsync(User);
+            
+            _db.Insert(new WorkingLogItem
+            {
+                Id = ObjectId.NewObjectId().ToString(),
+                UserId = user.Id,
+                Date = date,
+                Project = project,
+                WorkItem = workItem,
+                Type = type,
+                Hours = hours,
+                Detail = detail
+            });
+            return Content(new JObject
+            {
+                ["success"] = true
+            }.ToString(Formatting.None));
+        }
 
-            return View();
+        public IActionResult Delete(string id)
+        {
+            _db.Delete<WorkingLogItem>(item => item.Id == id);
+            return Content(new JObject
+            {
+                ["success"] = true
+            }.ToString(Formatting.None));
         }
 
         public IActionResult Error()
