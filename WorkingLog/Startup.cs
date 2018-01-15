@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using AspNetCore.Identity.LiteDB;
+using AspNetCore.Identity.LiteDB.Models;
 using LiteDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -7,8 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WorkingLog.Services;
-using ApplicationUser = AspNetCore.Identity.LiteDB.Models.ApplicationUser;
 using FileMode = System.IO.FileMode;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using RouteJs;
 
 namespace WorkingLog
 {
@@ -49,6 +51,9 @@ namespace WorkingLog
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddRouteJs();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

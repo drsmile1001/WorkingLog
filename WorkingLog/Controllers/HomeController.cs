@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using WorkingLog.Models;
 
 namespace WorkingLog.Controllers
@@ -16,24 +18,13 @@ namespace WorkingLog.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult IndexModel()
         {
-            ViewData["Message"] = "Your application description page.";
+            return Content(new JObject
+            {
+                ["success"] = true
 
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult NeedAuthorized()
-        {
-            return Content("成功");
+            }.ToString(Formatting.None));
         }
 
         public IActionResult Error()
