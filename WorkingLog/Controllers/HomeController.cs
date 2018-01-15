@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorkingLog.Models;
 
@@ -27,6 +28,12 @@ namespace WorkingLog.Controllers
             ViewData["Message"] = "Your contact page.";
 
             return View();
+        }
+
+        [Authorize]
+        public IActionResult NeedAuthorized()
+        {
+            return Content("成功");
         }
 
         public IActionResult Error()
