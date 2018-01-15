@@ -3,14 +3,43 @@
 }
 <div data-page="home">
     <h1>工作日誌</h1>
-    <div class="panel panel-primary">
+    <div data-panel="add" class="panel panel-primary">
         <div class="panel-heading">新增</div>
         <div class="panel-body">
-
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            日期<input class="form-control" data-field="date"/>
+                        </div>
+                        <div class="col-sm-3">
+                            專案<input class="form-control" data-field="project"/>
+                        </div>
+                        <div class="col-sm-3">
+                            工項<input class="form-control" data-field="workItem"/>
+                        </div>
+                        <div class="col-sm-2">
+                            性質<input class="form-control" data-field="type"/>
+                        </div>
+                        <div class="col-sm-2">
+                            費時<input class="form-control" data-field="hours" type="number"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            詳細<textarea class="form-control" data-field="detail" style="resize:none"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    &nbsp;
+                    <button class="btn btn-primary btn-block" data-action="add">新增</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <table class="table">
+    <table data-table="result" class="table">
         <thead>
         <tr>
             <th>日期</th>
@@ -24,7 +53,7 @@
         <tbody></tbody>
     </table>
     <table class="hidden">
-        <tbody>
+        <tbody data-template="row">
         <tr>
             <td data-field="date"></td>
             <td data-field="project"></td>
