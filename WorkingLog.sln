@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingLog", "WorkingLog\WorkingLog.csproj", "{C421FFF6-8B2A-49D2-9BE2-2D91CFB3F889}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.LiteDB", "AspNetCore.Identity.LiteDB\AspNetCore.Identity.LiteDB\AspNetCore.Identity.LiteDB\AspNetCore.Identity.LiteDB.csproj", "{2861284D-4C73-45B1-898F-16273EC84743}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C421FFF6-8B2A-49D2-9BE2-2D91CFB3F889}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C421FFF6-8B2A-49D2-9BE2-2D91CFB3F889}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C421FFF6-8B2A-49D2-9BE2-2D91CFB3F889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2861284D-4C73-45B1-898F-16273EC84743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2861284D-4C73-45B1-898F-16273EC84743}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2861284D-4C73-45B1-898F-16273EC84743}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2861284D-4C73-45B1-898F-16273EC84743}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,4 +18,8 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AspNetCore.Identity.LiteDB\AspNetCore.Identity.LiteDB\AspNetCore.Identity.LiteDB\AspNetCore.Identity.LiteDB.csproj" />
+  </ItemGroup>
+
 </Project>
