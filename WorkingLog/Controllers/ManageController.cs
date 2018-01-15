@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AspNetCore.Identity.LiteDB.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using WorkingLog.Models;
 using WorkingLog.Models.ManageViewModels;
 using WorkingLog.Services;
 
@@ -57,7 +55,7 @@ namespace WorkingLog.Controllers
             var model = new IndexViewModel
             {
                 Username = user.UserName,
-                Email = user.Email,
+                Email = user.Email.Address,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage
@@ -82,7 +80,7 @@ namespace WorkingLog.Controllers
             }
 
             var email = user.Email;
-            if (model.Email != email)
+            if (model.Email != email.Address)
             {
                 var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
                 if (!setEmailResult.Succeeded)
@@ -123,7 +121,7 @@ namespace WorkingLog.Controllers
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
             var email = user.Email;
-            await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
+            await _emailSender.SendEmailConfirmationAsync(email.Address, callbackUrl);
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToAction(nameof(Index));
@@ -381,7 +379,7 @@ namespace WorkingLog.Controllers
             var model = new EnableAuthenticatorViewModel
             {
                 SharedKey = FormatKey(unformattedKey),
-                AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey)
+                AuthenticatorUri = GenerateQrCodeUri(user.Email.Address, unformattedKey)
             };
 
             return View(model);
