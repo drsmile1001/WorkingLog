@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCore.Identity.LiteDB.Models;
 using LiteDB;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WorkingLog.Models;
+using FileMode = LiteDB.FileMode;
 
 namespace WorkingLog.Controllers
 {
@@ -85,6 +88,27 @@ namespace WorkingLog.Controllers
                 ["success"] = true
             }.ToString(Formatting.None));
         }
+
+        [HttpGet]
+        public IActionResult Upload()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            var filePath = Path.GetTempFileName();
+            if (file.Length <= 0) return RedirectToAction("Index");
+            using (var stream = new FileStream(filePath, System.IO.FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
 
         public IActionResult Error()
         {
