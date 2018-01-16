@@ -2,6 +2,7 @@
     this.data = [];
     this.projects = [];
     this.addData = {
+        date: moment().toISOString(),
         hours:1
     };
     var page = this;
@@ -11,10 +12,20 @@
     var $workItemSuggestions = $("#workItemSuggestions");
     this.initial = () => {
         page.loadData();
-        $page.find("[data-panel='add'] input").change(function () {
+        $page.find("[data-panel='add'] [data-field]").change(function () {
             var $this = $(this);
             var field = $this.attr("data-field");
+            if (field === "date")
+                return;
             page.addData[field] = $this.val();
+        });
+
+        $page.find("[data-panel='add'] [data-field='date']").datetimepicker({
+            locale: "zh-tw",
+            format: "YYYY-MM-DD",
+            defaultDate:moment()
+        }).on("dp.change", function(e) {
+            page.addData.date = e.date.toISOString();
         });
 
         $page.find("[data-panel='add'] input[data-field='project']").change(function () {
